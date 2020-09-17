@@ -315,7 +315,7 @@ Pipe StorageStripeLog::read(
     const size_t /*max_block_size*/,
     unsigned num_streams)
 {
-    std::shared_lock<std::shared_timed_mutex> lock(rwlock, getLockTimeout(context));
+    std::shared_lock lock(rwlock, getLockTimeout(context));
     if (!lock)
         throw Exception("Lock timeout exceeded", ErrorCodes::TIMEOUT_EXCEEDED);
 
@@ -358,7 +358,7 @@ Pipe StorageStripeLog::read(
 
 BlockOutputStreamPtr StorageStripeLog::write(const ASTPtr & /*query*/, const StorageMetadataPtr & metadata_snapshot, const Context & context)
 {
-    std::unique_lock<std::shared_timed_mutex> lock(rwlock, getLockTimeout(context));
+    std::unique_lock lock(rwlock, getLockTimeout(context));
     if (!lock)
         throw Exception("Lock timeout exceeded", ErrorCodes::TIMEOUT_EXCEEDED);
 
@@ -368,7 +368,7 @@ BlockOutputStreamPtr StorageStripeLog::write(const ASTPtr & /*query*/, const Sto
 
 CheckResults StorageStripeLog::checkData(const ASTPtr & /* query */, const Context & context)
 {
-    std::shared_lock<std::shared_timed_mutex> lock(rwlock, getLockTimeout(context));
+    std::shared_lock lock(rwlock, getLockTimeout(context));
     if (!lock)
         throw Exception("Lock timeout exceeded", ErrorCodes::TIMEOUT_EXCEEDED);
 
