@@ -284,8 +284,6 @@ void StorageStripeLog::rename(const String & new_path_to_table_data, const Stora
 {
     if (table_path != new_path_to_table_data)
     {
-        std::unique_lock<std::shared_mutex> lock(rwlock);
-
         disk->moveDirectory(table_path, new_path_to_table_data);
 
         table_path = new_path_to_table_data;
@@ -357,10 +355,7 @@ CheckResults StorageStripeLog::checkData(const ASTPtr & /* query */, const Conte
 
 void StorageStripeLog::truncate(const ASTPtr &, const StorageMetadataPtr &, const Context &, TableExclusiveLockHolder &)
 {
-    std::shared_lock<std::shared_mutex> lock(rwlock);
-
     disk->clearDirectory(table_path);
-
     file_checker = FileChecker{disk, table_path + "sizes.json"};
 }
 

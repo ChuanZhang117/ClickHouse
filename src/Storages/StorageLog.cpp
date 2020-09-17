@@ -550,8 +550,6 @@ void StorageLog::rename(const String & new_path_to_table_data, const StorageID &
 {
     if (table_path != new_path_to_table_data)
     {
-        std::unique_lock<std::shared_mutex> lock(rwlock);
-
         disk->moveDirectory(table_path, new_path_to_table_data);
 
         table_path = new_path_to_table_data;
@@ -567,8 +565,6 @@ void StorageLog::rename(const String & new_path_to_table_data, const StorageID &
 
 void StorageLog::truncate(const ASTPtr &, const StorageMetadataPtr & metadata_snapshot, const Context &, TableExclusiveLockHolder &)
 {
-    std::shared_lock<std::shared_mutex> lock(rwlock);
-
     files.clear();
     file_count = 0;
     loaded_marks = false;
